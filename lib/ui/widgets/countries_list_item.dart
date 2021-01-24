@@ -14,6 +14,13 @@ class CountriesListItem extends StatelessWidget {
       title: Text(countryData.countryName),
       isThreeLine: true,
       subtitle: Text(countryData.region),
+      trailing: Image.asset(() {
+        if(countryData.isFavorite) {
+          return 'assets/images/heart_filled.png';
+        } else {
+          return 'assets/images/heart_outlined.png';
+        }
+      }(), width: 24, height: 24),
       dense: true,
     );
   }
