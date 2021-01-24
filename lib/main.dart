@@ -1,3 +1,5 @@
+import 'package:countries_app/tabs/all_countries.dart';
+import 'package:countries_app/tabs/favourite_countries.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -42,8 +44,15 @@ class MyHomePage extends StatelessWidget {
             ],
           ),
         ),
-        body: Container(),
+        body: TabBarView(
+          children: containers,
+        ),
       ),
     );
   }
+
+  final List<Widget> containers = [
+    AllCountries(),
+    FavouriteCountries()
+  ];
 }
