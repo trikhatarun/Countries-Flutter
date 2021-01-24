@@ -1,5 +1,5 @@
-import 'package:countries_app/tabs/all_countries.dart';
-import 'package:countries_app/tabs/favourite_countries.dart';
+import 'package:countries_app/ui/tabs/all/all_countries.dart';
+import 'package:countries_app/ui/tabs/favorites/favorite_countries.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -53,6 +53,6 @@ class MyHomePage extends StatelessWidget {
 
   final List<Widget> containers = [
     AllCountries(),
-    FavouriteCountries()
+    FavoriteCountries()
   ];
 }

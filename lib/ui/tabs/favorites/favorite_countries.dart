@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class FavouriteCountries extends StatelessWidget {
+class FavoriteCountries extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
