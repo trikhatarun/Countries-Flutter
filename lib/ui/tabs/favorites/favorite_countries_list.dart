@@ -9,24 +9,27 @@ class FavoriteCountriesList extends StatefulWidget {
 }
 
 class _FavoriteCountriesState extends State<FavoriteCountriesList> {
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FavoritesBloc, FavoriteState>(
       builder: (context, state) {
         switch (state.status) {
           case FavoriteStatus.failure:
-            return const Center(
-                child: Text(
-                    'Failed to fetch favorites'));
+            return Container(
+              margin: EdgeInsets.symmetric(horizontal: 20.0),
+              child: const Center(child: Text('Failed to fetch favorites')),
+            );
           case FavoriteStatus.success:
             if (state.countries.isEmpty) {
-              return const Center(child: Text('You do not have any favorites, Please add some from all countries tab'));
+              return Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20.0),
+                  child: const Center(
+                      child: Text(
+                          'You do not have any favorites, Please add some from all countries tab')));
             }
             return ListView.builder(
               itemBuilder: (BuildContext context, int index) {
-                return FavoriteListItem(
-                    countryData: state.countries[index]);
+                return FavoriteListItem(countryData: state.countries[index]);
               },
               itemCount: state.countries.length,
             );

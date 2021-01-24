@@ -26,9 +26,12 @@ class _AllCountriesState extends State<AllCountriesList> {
       builder: (context, state) {
         switch (state.status) {
           case AllCountriesStatus.failure:
-            return const Center(
-                child: Text(
-                    'Failed to fetch posts, Please check your internet connection.'));
+            return Container(
+              margin: EdgeInsets.symmetric(horizontal: 20.0),
+              child: const Center(
+                  child: Text(
+                      'Failed to fetch posts, Please check your internet connection.')),
+            );
           case AllCountriesStatus.success:
             if (state.countries.isEmpty) {
               return const Center(child: Text('no posts'));
