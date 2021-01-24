@@ -55,7 +55,6 @@ class _AllCountriesState extends State<AllCountriesList> {
   @override
   void dispose() {
     _scrollController.dispose();
-    _countriesBloc.close();
     super.dispose();
   }
 

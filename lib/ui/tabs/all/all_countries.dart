@@ -5,6 +5,7 @@ import 'package:countries_app/ui/tabs/all/bloc/all_countries_bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 class AllCountries extends StatelessWidget {
   @override
@@ -12,7 +13,7 @@ class AllCountries extends StatelessWidget {
     return Container(
       child: BlocProvider(
         create: (_) =>
-            AllCountriesBloc(new AppDatabase(), new RestClient(new Dio()))
+            AllCountriesBloc(Provider.of<AppDatabase>(context), new RestClient(new Dio()))
               ..add(CountriesFetched()),
         child: AllCountriesList(),
       ),

@@ -1,9 +1,15 @@
+import 'package:countries_app/data/db/app_database.dart';
 import 'package:countries_app/ui/tabs/all/all_countries.dart';
 import 'package:countries_app/ui/tabs/favorites/favorite_countries.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(Provider<AppDatabase>(
+    create: (context) => AppDatabase(),
+    child: MyApp(),
+    dispose: (context, db) => db.close(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

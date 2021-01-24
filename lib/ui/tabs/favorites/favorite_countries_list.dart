@@ -9,13 +9,6 @@ class FavoriteCountriesList extends StatefulWidget {
 }
 
 class _FavoriteCountriesState extends State<FavoriteCountriesList> {
-  FavoritesBloc _countriesBloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _countriesBloc = context.read<FavoritesBloc>();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +35,5 @@ class _FavoriteCountriesState extends State<FavoriteCountriesList> {
         }
       },
     );
-  }
-
-  @override
-  void dispose() {
-    _countriesBloc.close();
-    super.dispose();
   }
 }

@@ -3,6 +3,7 @@ import 'package:countries_app/ui/tabs/favorites/bloc/favorites_bloc.dart';
 import 'package:countries_app/ui/tabs/favorites/favorite_countries_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 
 class FavoriteCountries extends StatelessWidget {
 
@@ -11,7 +12,7 @@ class FavoriteCountries extends StatelessWidget {
     return Container(
       child: BlocProvider(
         create: (_) =>
-        FavoritesBloc(AppDatabase())
+        FavoritesBloc(Provider.of<AppDatabase>(context))
           ..add(CountriesFetched()),
         child: FavoriteCountriesList(),
       ),
