@@ -5,9 +5,10 @@ part 'countries_response.g.dart';
 
 @JsonSerializable()
 class CountryResponse {
-  final List<Map<String, CountryData>> data;
+  final int total;
+  final Map<String, CountryData> data;
 
-  CountryResponse(this.data);
+  CountryResponse(this.total, this.data);
 
   factory CountryResponse.fromJson(Map<String, dynamic> json) => _$CountryResponseFromJson(json);
   Map<String, dynamic> toJson() => _$CountryResponseToJson(this);

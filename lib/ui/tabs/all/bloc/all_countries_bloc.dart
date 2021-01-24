@@ -2,21 +2,20 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:countries_app/data/db/app_database.dart';
+import 'package:countries_app/data/network/model/countries_response.dart';
 import 'package:countries_app/data/network/rest_client.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/foundation.dart';
 
 part 'all_countries_event.dart';
 
 part 'all_countries_state.dart';
 
-//find a way to substitute this data from api
-const _dataLimit = 251;
 const _pageLimit = 20;
 
 class AllCountriesBloc extends Bloc<AllCountriesEvent, AllCountriesState> {
-  AllCountriesBloc({@required this.restClient})
-      : super(const AllCountriesState());
+  int _dataLimit = 20;
+
+  AllCountriesBloc(this.db, this.restClient) : super(const AllCountriesState());
 
   final RestClient restClient;
   final AppDatabase db;
@@ -33,36 +32,46 @@ class AllCountriesBloc extends Bloc<AllCountriesEvent, AllCountriesState> {
     if (state.hasReachedMax) return state;
     try {
       if (state.status == AllCountriesStatus.initial) {
-        final posts = await _fetchCountries();
+        final countries = await _fetchCountries();
         return state.copyWith(
-          status: PostStatus.success,
-          posts: posts,
-          hasReachedMax: _hasReachedMax(posts.length),
+          status: AllCountriesStatus.success,
+          countries: countries,
+          hasReachedMax: _hasReachedMax(state.countries.length),
         );
       }
-      final posts = await _fetchPosts(state.posts.length);
-      return posts.isEmpty
+      final countries = await _fetchCountries(state.countries.length);
+      return countries.isEmpty
           ? state.copyWith(hasReachedMax: true)
           : state.copyWith(
-        status: PostStatus.success,
-        posts: List.of(state.posts)
-          ..addAll(posts),
-        hasReachedMax: _hasReachedMax(posts.length),
-      );
+              status: AllCountriesStatus.success,
+              countries: List.of(state.countries)..addAll(countries),
+              hasReachedMax: _hasReachedMax(state.countries.length + countries.length),
+            );
     } on Exception {
-      return state.copyWith(status: PostStatus.failure);
+      return state.copyWith(status: AllCountriesStatus.failure);
     }
   }
 
-  Future<List<CountryData>> _fetchCountries([int startIndex = 0]) async {
-    await restClient.getCountries(_pageLimit, startIndex).then((value) => {
-      return _convertToCountryData(value)
-    }).catchError((Object obj) {
-      // non-200 error goes here.
-      print(obj);
-    });
+  Future<List<CountryData>> _fetchCountries([int offset = 0]) async {
+    final response = await restClient.getCountries(_pageLimit, offset);
+    _dataLimit = response.total;
+    return _convertToCountryData(response);
   }
-}
 
-bool _hasReachedMax(int countriesCount) =>
-    countriesCount < _dataLimit ? false : true;}
+  List<CountryData> _convertToCountryData(CountryResponse response) {
+    List<CountryData> countryList = List();
+
+    response.data.forEach((key, value) {
+      countryList.add(new CountryData(
+          code: key,
+          countryName: value.country,
+          region: value.region,
+          isFavorite: false));
+    });
+
+    return countryList;
+  }
+
+  bool _hasReachedMax(int countriesCount) =>
+      countriesCount < _dataLimit ? false : true;
+}
