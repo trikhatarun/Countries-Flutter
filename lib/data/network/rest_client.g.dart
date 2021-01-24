@@ -17,9 +17,14 @@ class _RestClient implements RestClient {
   String baseUrl;
 
   @override
-  Future<CountryResponse> getCountries() async {
+  Future<CountryResponse> getCountries(limit, offset) async {
+    ArgumentError.checkNotNull(limit, 'limit');
+    ArgumentError.checkNotNull(offset, 'offset');
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'limit': limit,
+      r'offset': offset
+    };
     final _data = <String, dynamic>{};
     final _result = await _dio.request<Map<String, dynamic>>('countries',
         queryParameters: queryParameters,

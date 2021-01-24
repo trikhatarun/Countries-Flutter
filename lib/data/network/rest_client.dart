@@ -9,5 +9,5 @@ abstract class RestClient {
   factory RestClient(Dio dio, {String baseUrl}) = _RestClient;
 
   @GET("countries")
-  Future<CountryResponse> getCountries();
+  Future<CountryResponse> getCountries(@Query('limit') int limit, @Query('offset') int offset);
 }
