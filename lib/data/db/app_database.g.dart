@@ -9,12 +9,12 @@ part of 'app_database.dart';
 // ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
 class CountryData extends DataClass implements Insertable<CountryData> {
   final String code;
-  final String country;
+  final String countryName;
   final String region;
   final bool isFavorite;
   CountryData(
       {@required this.code,
-      @required this.country,
+      @required this.countryName,
       @required this.region,
       @required this.isFavorite});
   factory CountryData.fromData(Map<String, dynamic> data, GeneratedDatabase db,
@@ -24,8 +24,8 @@ class CountryData extends DataClass implements Insertable<CountryData> {
     final boolType = db.typeSystem.forDartType<bool>();
     return CountryData(
       code: stringType.mapFromDatabaseResponse(data['${effectivePrefix}code']),
-      country:
-          stringType.mapFromDatabaseResponse(data['${effectivePrefix}country']),
+      countryName: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}country_name']),
       region:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}region']),
       isFavorite: boolType
@@ -38,8 +38,8 @@ class CountryData extends DataClass implements Insertable<CountryData> {
     if (!nullToAbsent || code != null) {
       map['code'] = Variable<String>(code);
     }
-    if (!nullToAbsent || country != null) {
-      map['country'] = Variable<String>(country);
+    if (!nullToAbsent || countryName != null) {
+      map['country_name'] = Variable<String>(countryName);
     }
     if (!nullToAbsent || region != null) {
       map['region'] = Variable<String>(region);
@@ -53,9 +53,9 @@ class CountryData extends DataClass implements Insertable<CountryData> {
   CountryCompanion toCompanion(bool nullToAbsent) {
     return CountryCompanion(
       code: code == null && nullToAbsent ? const Value.absent() : Value(code),
-      country: country == null && nullToAbsent
+      countryName: countryName == null && nullToAbsent
           ? const Value.absent()
-          : Value(country),
+          : Value(countryName),
       region:
           region == null && nullToAbsent ? const Value.absent() : Value(region),
       isFavorite: isFavorite == null && nullToAbsent
@@ -69,7 +69,7 @@ class CountryData extends DataClass implements Insertable<CountryData> {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return CountryData(
       code: serializer.fromJson<String>(json['code']),
-      country: serializer.fromJson<String>(json['country']),
+      countryName: serializer.fromJson<String>(json['countryName']),
       region: serializer.fromJson<String>(json['region']),
       isFavorite: serializer.fromJson<bool>(json['isFavorite']),
     );
@@ -79,17 +79,17 @@ class CountryData extends DataClass implements Insertable<CountryData> {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'code': serializer.toJson<String>(code),
-      'country': serializer.toJson<String>(country),
+      'countryName': serializer.toJson<String>(countryName),
       'region': serializer.toJson<String>(region),
       'isFavorite': serializer.toJson<bool>(isFavorite),
     };
   }
 
   CountryData copyWith(
-          {String code, String country, String region, bool isFavorite}) =>
+          {String code, String countryName, String region, bool isFavorite}) =>
       CountryData(
         code: code ?? this.code,
-        country: country ?? this.country,
+        countryName: countryName ?? this.countryName,
         region: region ?? this.region,
         isFavorite: isFavorite ?? this.isFavorite,
       );
@@ -97,7 +97,7 @@ class CountryData extends DataClass implements Insertable<CountryData> {
   String toString() {
     return (StringBuffer('CountryData(')
           ..write('code: $code, ')
-          ..write('country: $country, ')
+          ..write('countryName: $countryName, ')
           ..write('region: $region, ')
           ..write('isFavorite: $isFavorite')
           ..write(')'))
@@ -105,46 +105,48 @@ class CountryData extends DataClass implements Insertable<CountryData> {
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(code.hashCode,
-      $mrjc(country.hashCode, $mrjc(region.hashCode, isFavorite.hashCode))));
+  int get hashCode => $mrjf($mrjc(
+      code.hashCode,
+      $mrjc(
+          countryName.hashCode, $mrjc(region.hashCode, isFavorite.hashCode))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is CountryData &&
           other.code == this.code &&
-          other.country == this.country &&
+          other.countryName == this.countryName &&
           other.region == this.region &&
           other.isFavorite == this.isFavorite);
 }
 
 class CountryCompanion extends UpdateCompanion<CountryData> {
   final Value<String> code;
-  final Value<String> country;
+  final Value<String> countryName;
   final Value<String> region;
   final Value<bool> isFavorite;
   const CountryCompanion({
     this.code = const Value.absent(),
-    this.country = const Value.absent(),
+    this.countryName = const Value.absent(),
     this.region = const Value.absent(),
     this.isFavorite = const Value.absent(),
   });
   CountryCompanion.insert({
     @required String code,
-    @required String country,
+    @required String countryName,
     @required String region,
     this.isFavorite = const Value.absent(),
   })  : code = Value(code),
-        country = Value(country),
+        countryName = Value(countryName),
         region = Value(region);
   static Insertable<CountryData> custom({
     Expression<String> code,
-    Expression<String> country,
+    Expression<String> countryName,
     Expression<String> region,
     Expression<bool> isFavorite,
   }) {
     return RawValuesInsertable({
       if (code != null) 'code': code,
-      if (country != null) 'country': country,
+      if (countryName != null) 'country_name': countryName,
       if (region != null) 'region': region,
       if (isFavorite != null) 'is_favorite': isFavorite,
     });
@@ -152,12 +154,12 @@ class CountryCompanion extends UpdateCompanion<CountryData> {
 
   CountryCompanion copyWith(
       {Value<String> code,
-      Value<String> country,
+      Value<String> countryName,
       Value<String> region,
       Value<bool> isFavorite}) {
     return CountryCompanion(
       code: code ?? this.code,
-      country: country ?? this.country,
+      countryName: countryName ?? this.countryName,
       region: region ?? this.region,
       isFavorite: isFavorite ?? this.isFavorite,
     );
@@ -169,8 +171,8 @@ class CountryCompanion extends UpdateCompanion<CountryData> {
     if (code.present) {
       map['code'] = Variable<String>(code.value);
     }
-    if (country.present) {
-      map['country'] = Variable<String>(country.value);
+    if (countryName.present) {
+      map['country_name'] = Variable<String>(countryName.value);
     }
     if (region.present) {
       map['region'] = Variable<String>(region.value);
@@ -185,7 +187,7 @@ class CountryCompanion extends UpdateCompanion<CountryData> {
   String toString() {
     return (StringBuffer('CountryCompanion(')
           ..write('code: $code, ')
-          ..write('country: $country, ')
+          ..write('countryName: $countryName, ')
           ..write('region: $region, ')
           ..write('isFavorite: $isFavorite')
           ..write(')'))
@@ -206,13 +208,15 @@ class $CountryTable extends Country with TableInfo<$CountryTable, CountryData> {
         minTextLength: 1, maxTextLength: 2);
   }
 
-  final VerificationMeta _countryMeta = const VerificationMeta('country');
-  GeneratedTextColumn _country;
+  final VerificationMeta _countryNameMeta =
+      const VerificationMeta('countryName');
+  GeneratedTextColumn _countryName;
   @override
-  GeneratedTextColumn get country => _country ??= _constructCountry();
-  GeneratedTextColumn _constructCountry() {
+  GeneratedTextColumn get countryName =>
+      _countryName ??= _constructCountryName();
+  GeneratedTextColumn _constructCountryName() {
     return GeneratedTextColumn(
-      'country',
+      'country_name',
       $tableName,
       false,
     );
@@ -240,7 +244,7 @@ class $CountryTable extends Country with TableInfo<$CountryTable, CountryData> {
   }
 
   @override
-  List<GeneratedColumn> get $columns => [code, country, region, isFavorite];
+  List<GeneratedColumn> get $columns => [code, countryName, region, isFavorite];
   @override
   $CountryTable get asDslTable => this;
   @override
@@ -258,11 +262,13 @@ class $CountryTable extends Country with TableInfo<$CountryTable, CountryData> {
     } else if (isInserting) {
       context.missing(_codeMeta);
     }
-    if (data.containsKey('country')) {
-      context.handle(_countryMeta,
-          country.isAcceptableOrUnknown(data['country'], _countryMeta));
+    if (data.containsKey('country_name')) {
+      context.handle(
+          _countryNameMeta,
+          countryName.isAcceptableOrUnknown(
+              data['country_name'], _countryNameMeta));
     } else if (isInserting) {
-      context.missing(_countryMeta);
+      context.missing(_countryNameMeta);
     }
     if (data.containsKey('region')) {
       context.handle(_regionMeta,
@@ -297,6 +303,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   $CountryTable _country;
   $CountryTable get country => _country ??= $CountryTable(this);
+  CountryDao _countryDao;
+  CountryDao get countryDao => _countryDao ??= CountryDao(this as AppDatabase);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
