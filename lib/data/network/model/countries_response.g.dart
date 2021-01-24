@@ -14,7 +14,7 @@ CountryResponse _$CountryResponseFromJson(Map<String, dynamic> json) {
                   k,
                   e == null
                       ? null
-                      : Country.fromJson(e as Map<String, dynamic>)),
+                      : CountryData.fromJson(e as Map<String, dynamic>)),
             ))
         ?.toList(),
   );

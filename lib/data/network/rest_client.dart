@@ -1,4 +1,4 @@
-import 'package:countries_app/data/model/countries_response.dart';
+import 'package:countries_app/data/network/model/countries_response.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 

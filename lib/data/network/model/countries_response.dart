@@ -1,11 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'country.dart';
+import 'country_data.dart';
 
 part 'countries_response.g.dart';
 
 @JsonSerializable()
 class CountryResponse {
-  final List<Map<String, Country>> data;
+  final List<Map<String, CountryData>> data;
 
   CountryResponse(this.data);
 
