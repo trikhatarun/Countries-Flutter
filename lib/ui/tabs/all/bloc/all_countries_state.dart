@@ -28,5 +28,3 @@ class AllCountriesState extends Equatable {
   @override
   List<Object> get props => [status, countries, hasReachedMax];
 }
-
-

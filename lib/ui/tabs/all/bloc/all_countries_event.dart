@@ -6,3 +6,8 @@ abstract class AllCountriesEvent extends Equatable {
 }
 
 class CountriesFetched extends AllCountriesEvent {}
+class CountryAddedToFavorite extends AllCountriesEvent {
+  final CountryData data;
+
+  CountryAddedToFavorite(this.data);
+}

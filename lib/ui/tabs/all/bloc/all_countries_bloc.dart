@@ -24,6 +24,8 @@ class AllCountriesBloc extends Bloc<AllCountriesEvent, AllCountriesState> {
   Stream<AllCountriesState> mapEventToState(AllCountriesEvent event) async* {
     if (event is CountriesFetched) {
       yield await _mapCountriesFetchedToState(state);
+    } else if (event is CountryAddedToFavorite) {
+      yield await _mapCountryAddedToFavoriteToState(event.data, state);
     }
   }
 
@@ -45,28 +47,76 @@ class AllCountriesBloc extends Bloc<AllCountriesEvent, AllCountriesState> {
           : state.copyWith(
               status: AllCountriesStatus.success,
               countries: List.of(state.countries)..addAll(countries),
-              hasReachedMax: _hasReachedMax(state.countries.length + countries.length),
+              hasReachedMax:
+                  _hasReachedMax(state.countries.length + countries.length),
             );
     } on Exception {
       return state.copyWith(status: AllCountriesStatus.failure);
     }
   }
 
-  Future<List<CountryData>> _fetchCountries([int offset = 0]) async {
-    final response = await restClient.getCountries(_pageLimit, offset);
-    _dataLimit = response.total;
-    return _convertToCountryData(response);
+  Future<AllCountriesState> _mapCountryAddedToFavoriteToState(
+      CountryData data, AllCountriesState state) async {
+    final updatedEntry = await _addRemoveCountryFromFavorite(data);
+    final countries = state.countries;
+
+    if (updatedEntry != null) {
+      final index = state.countries.indexWhere((element) => element.code == data.code);
+      countries.removeAt(index);
+      countries.insert(index, updatedEntry);
+    }
+
+    return state.copyWith(
+        status: AllCountriesStatus.success, countries: List.of(countries));
   }
 
-  List<CountryData> _convertToCountryData(CountryResponse response) {
+  Future<List<CountryData>> _fetchCountries([int offset = 0]) async {
+    final response = await restClient.getCountries(_pageLimit, offset);
+    final dbResponse = await db.countryDao.getAllFavorites();
+    _dataLimit = response.total;
+    return _convertToCountryData(response, dbResponse);
+  }
+
+  Future<CountryData> _addRemoveCountryFromFavorite(
+      CountryData countryData) async {
+    int result = -1;
+    if (countryData.isFavorite) {
+      result = await db.countryDao.removeFavorite(countryData);
+    } else {
+      result = await db.countryDao.insertFavorite(countryData);
+    }
+    if (result != -1) {
+      return CountryData(
+          code: countryData.code,
+          countryName: countryData.countryName,
+          region: countryData.region,
+          isFavorite: !countryData.isFavorite);
+    } else {
+      return null;
+    }
+  }
+
+  List<CountryData> _convertToCountryData(
+      CountryResponse response, List<CountryData> dbResponse) {
     List<CountryData> countryList = List();
 
     response.data.forEach((key, value) {
-      countryList.add(new CountryData(
-          code: key,
-          countryName: value.country,
-          region: value.region,
-          isFavorite: false));
+      int index = -1;
+      index = dbResponse.indexWhere((element) => element.code == key);
+
+      if (index != -1) {
+        countryList.add(new CountryData(
+            code: key,
+            countryName: value.country,
+            region: value.region,
+            isFavorite: true));
+      } else {
+        countryList.add(new CountryData(
+            code: key,
+            countryName: value.country,
+            region: value.region,
+            isFavorite: false));
+      }
     });
 
     return countryList;

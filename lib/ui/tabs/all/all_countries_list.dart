@@ -26,7 +26,9 @@ class _AllCountriesState extends State<AllCountriesList> {
       builder: (context, state) {
         switch (state.status) {
           case AllCountriesStatus.failure:
-            return const Center(child: Text('Failed to fetch posts, Please check your internet connection.'));
+            return const Center(
+                child: Text(
+                    'Failed to fetch posts, Please check your internet connection.'));
           case AllCountriesStatus.success:
             if (state.countries.isEmpty) {
               return const Center(child: Text('no posts'));
@@ -35,7 +37,8 @@ class _AllCountriesState extends State<AllCountriesList> {
               itemBuilder: (BuildContext context, int index) {
                 return index >= state.countries.length
                     ? BottomLoader()
-                    : CountriesListItem(countryData: state.countries[index]);
+                    : CountriesListItem(
+                        countryData: state.countries[index]);
               },
               itemCount: state.hasReachedMax
                   ? state.countries.length

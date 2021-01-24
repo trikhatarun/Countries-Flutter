@@ -11,6 +11,7 @@ class CountryDao extends DatabaseAccessor<AppDatabase> with _$CountryDaoMixin {
   CountryDao(this.db): super(db);
 
   Stream<List<CountryData>> watchAllFavorites() => select(country).watch();
-  Future insertFavorite(CountryData favorite) => into(country).insert(favorite);
-  Future removeFavorite(CountryData favorite) => delete(country).delete(favorite);
+  Future<List<CountryData>> getAllFavorites() => select(country).get();
+  Future<int> insertFavorite(CountryData favorite) => into(country).insert(favorite);
+  Future<int> removeFavorite(CountryData favorite) => (delete(country)..where((tbl) => tbl.code.equals(favorite.code))).go();
 }
